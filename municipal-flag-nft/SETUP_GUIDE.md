@@ -10,12 +10,11 @@ This guide walks you through setting up and running the Municipal Flag NFT Game 
 4. [Phase 2: Backend Setup](#phase-2-backend-setup)
 5. [Phase 3: Frontend Setup](#phase-3-frontend-setup)
 6. [Phase 4: Smart Contract Deployment](#phase-4-smart-contract-deployment)
-7. [Phase 5: AI Image Generation](#phase-5-ai-image-generation)
-8. [Phase 6: IPFS Upload](#phase-6-ipfs-upload)
-9. [Phase 7: Database Seeding](#phase-7-database-seeding)
-10. [Phase 8: Import IPFS Hashes](#phase-8-import-ipfs-hashes)
-11. [Phase 9: Running the Application](#phase-9-running-the-application)
-12. [Troubleshooting](#troubleshooting)
+7. [Phase 5: Database Seeding](#phase-5-database-seeding)
+8. [Phase 6: AI Image Generation](#phase-6-ai-image-generation)
+9. [Phase 7: IPFS Upload](#phase-7-ipfs-upload)
+10. [Phase 8: Running the Application](#phase-8-running-the-application)
+11. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -62,6 +61,7 @@ municipal-flag-nft/
 ├── backend/                # FastAPI backend
 │   ├── main.py
 │   ├── requirements.txt
+│   ├── nft_game.db        # SQLite database (auto-created)
 │   └── venv/
 ├── frontend/               # React + Vite frontend
 │   ├── src/
@@ -73,7 +73,8 @@ municipal-flag-nft/
 │   └── hardhat.config.js
 └── ai-generator/           # AI image generation
     ├── generate_flags.py
-    ├── upload_to_ipfs.py
+    ├── upload_to_ipfs.py   # Uploads to IPFS & updates database directly
+    ├── output/             # Generated images
     └── requirements.txt
 ```
 
@@ -244,9 +245,41 @@ npx hardhat verify --network polygonAmoy 0x62bbe0FFb425Fc10CeC28F2059F48268a110A
 
 ---
 
-## Phase 5: AI Image Generation
+## Phase 5: Database Seeding
 
-### 5.1 Setup AI Generator Environment
+**Important:** The backend must be running for this step.
+
+### 5.1 Seed Demo Data
+
+**Windows (PowerShell):**
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/api/admin/seed" -Method POST -Headers @{"X-Admin-Key"="demo-admin-key-change-me"}
+```
+
+**Linux/Mac/Git Bash:**
+```bash
+curl -X POST "http://localhost:8000/api/admin/seed" \
+  -H "X-Admin-Key: demo-admin-key-change-me"
+```
+
+**Expected Response:**
+```json
+{"message": "Demo data seeded successfully"}
+```
+
+### 5.2 Verify Seeding
+
+```bash
+curl "http://localhost:8000/api/countries"
+```
+
+Should return 4 countries (Spain, France, Germany, Italy).
+
+---
+
+## Phase 6: AI Image Generation
+
+### 6.1 Setup AI Generator Environment
 
 **Windows:**
 ```bash
@@ -264,7 +297,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 5.2 Generate Flag Images
+### 6.2 Generate Flag Images
 
 **Option A: Using AI (requires Stability AI or Replicate credits)**
 
@@ -294,17 +327,13 @@ This generates:
 - 64 flag images in `ai-generator/output/`
 - Metadata files in `ai-generator/metadata/`
 
-### 5.3 Generate Metadata Only (if images already exist)
-
-```bash
-python generate_flags.py --metadata-only
-```
-
 ---
 
-## Phase 6: IPFS Upload
+## Phase 7: IPFS Upload
 
-### 6.1 Upload to Pinata
+**Important:** Database must be seeded (Phase 5) before this step.
+
+### 7.1 Upload to Pinata & Update Database
 
 Make sure Pinata credentials are set in root `.env`, then:
 
@@ -313,94 +342,49 @@ cd ai-generator
 python upload_to_ipfs.py
 ```
 
-This uploads all images and metadata to IPFS via Pinata and creates:
-- `ai-generator/output/ipfs_mapping.json`
-- `backend/ipfs_mapping.json`
+This script:
+1. Reads flags from the database
+2. Uploads images to IPFS via Pinata
+3. Uploads metadata to IPFS
+4. **Updates the database directly** with IPFS hashes
 
-### 6.2 Verify Uploads (Optional)
+No JSON mapping files needed - everything is stored in the database!
+
+### 7.2 Check Upload Status
+
+```bash
+python upload_to_ipfs.py --status
+```
+
+### 7.3 Verify Uploads (Optional)
 
 ```bash
 python upload_to_ipfs.py --verify
 ```
 
----
+### 7.4 Verify via API
 
-## Phase 7: Database Seeding
-
-### 7.1 Seed Demo Data
-
-With the backend running, execute:
-
-**Windows (PowerShell):**
-```powershell
-Invoke-RestMethod -Uri "http://localhost:8000/api/admin/seed" -Method POST -Headers @{"X-Admin-Key"="demo-admin-key-change-me"}
-```
-
-**Linux/Mac/Git Bash:**
 ```bash
-curl -X POST "http://localhost:8000/api/admin/seed" \
-  -H "X-Admin-Key: demo-admin-key-change-me"
+curl "http://localhost:8000/api/admin/ipfs-status" -H "X-Admin-Key: demo-admin-key-change-me"
 ```
 
-**Expected Response:**
+Expected response:
 ```json
-{"message": "Demo data seeded successfully"}
+{
+  "total_flags": 64,
+  "flags_with_image_hash": 64,
+  "flags_with_metadata_hash": 64,
+  "flags_pending_upload": 0
+}
 ```
-
-### 7.2 Verify Seeding
-
-```bash
-curl "http://localhost:8000/api/countries"
-```
-
-Should return 4 countries (Spain, France, Germany, Italy).
 
 ---
 
-## Phase 8: Import IPFS Hashes
+## Phase 8: Running the Application
 
-After uploading to IPFS, import the hashes into the database:
+### 8.1 Start All Services
 
-### Option A: Using the Import Script
-
-```bash
-cd backend
-python import_ipfs.py
-```
-
-### Option B: Using the API Endpoint
-
-**Windows (PowerShell):**
-```powershell
-Invoke-RestMethod -Uri "http://localhost:8000/api/admin/import-ipfs-file" -Method POST -Headers @{"X-Admin-Key"="demo-admin-key-change-me"}
-```
-
-**Linux/Mac/Git Bash:**
-```bash
-curl -X POST "http://localhost:8000/api/admin/import-ipfs-file" \
-  -H "X-Admin-Key: demo-admin-key-change-me"
-```
-
-**Expected Response:**
-```json
-{"message": "IPFS hashes imported from file successfully", "updated": 64, "not_found": 0}
-```
-
-### 8.1 Verify Images in API
-
-```bash
-curl "http://localhost:8000/api/flags?limit=1"
-```
-
-Check that `image_ipfs_hash` is not null.
-
----
-
-## Phase 9: Running the Application
-
-### 9.1 Start All Services
-
-Open 3 terminal windows:
+Open 2 terminal windows:
 
 **Terminal 1 - Backend:**
 ```bash
@@ -416,13 +400,7 @@ cd frontend
 npm run dev
 ```
 
-**Terminal 3 - (Optional) Contract development:**
-```bash
-cd contracts
-npx hardhat node  # Local blockchain for testing
-```
-
-### 9.2 Access the Application
+### 8.2 Access the Application
 
 | Service | URL |
 |---------|-----|
@@ -431,7 +409,7 @@ npx hardhat node  # Local blockchain for testing
 | API Docs | http://localhost:8000/docs |
 | Contract (Amoy) | https://amoy.polygonscan.com/address/YOUR_CONTRACT |
 
-### 9.3 Test the Application
+### 8.3 Test the Application
 
 1. Open http://localhost:5173
 2. Click "Connect Wallet" - MetaMask will prompt to connect
@@ -482,9 +460,9 @@ curl -X POST "http://localhost:8000/api/admin/seed" -H "X-Admin-Key: demo-admin-
 ### Image Issues
 
 **Images not showing**
-- Run `python import_ipfs.py` in backend folder
+- Check IPFS status: `curl "http://localhost:8000/api/admin/ipfs-status" -H "X-Admin-Key: demo-admin-key-change-me"`
+- Re-run IPFS upload: `cd ai-generator && python upload_to_ipfs.py`
 - Check `image_ipfs_hash` is not null in API response
-- Check IPFS gateway is accessible
 
 ### MetaMask Issues
 
@@ -498,32 +476,45 @@ curl -X POST "http://localhost:8000/api/admin/seed" -H "X-Admin-Key: demo-admin-
 ## Quick Reference Commands
 
 ```bash
-# Backend
+# === BACKEND ===
 cd backend && venv\Scripts\activate && python main.py
 
-# Frontend
+# === FRONTEND ===
 cd frontend && npm run dev
 
-# Generate images (placeholders)
-cd ai-generator && venv\Scripts\activate && python generate_flags.py
-
-# Upload to IPFS
-cd ai-generator && python upload_to_ipfs.py
-
-# Import IPFS hashes
-cd backend && python import_ipfs.py
-
+# === DATABASE ===
 # Seed database
 curl -X POST "http://localhost:8000/api/admin/seed" -H "X-Admin-Key: demo-admin-key-change-me"
 
 # Reset database
 curl -X POST "http://localhost:8000/api/admin/reset" -H "X-Admin-Key: demo-admin-key-change-me"
 
+# Check IPFS status
+curl "http://localhost:8000/api/admin/ipfs-status" -H "X-Admin-Key: demo-admin-key-change-me"
+
+# === AI GENERATOR ===
+cd ai-generator && venv\Scripts\activate
+
+# Generate images (placeholders)
+python generate_flags.py
+
+# Upload to IPFS (updates database directly)
+python upload_to_ipfs.py
+
+# Check upload status
+python upload_to_ipfs.py --status
+
+# Verify uploads
+python upload_to_ipfs.py --verify
+
+# === SMART CONTRACT ===
+cd contracts
+
 # Deploy contract
-cd contracts && npx hardhat run scripts/deploy.js --network polygonAmoy
+npx hardhat run scripts/deploy.js --network polygonAmoy
 
 # Verify contract
-cd contracts && npx hardhat verify --network polygonAmoy <CONTRACT_ADDRESS>
+npx hardhat verify --network polygonAmoy <CONTRACT_ADDRESS>
 ```
 
 ---
