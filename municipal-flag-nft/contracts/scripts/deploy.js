@@ -10,7 +10,7 @@ async function main() {
 
   // Check balance
   const balance = await hre.ethers.provider.getBalance(deployer.address);
-  console.log("💰 Account balance:", hre.ethers.formatEther(balance), "MATIC\n");
+  console.log("💰 Account balance:", hre.ethers.formatEther(balance), "POL\n");
 
   // Get base URI from environment or use default
   const baseURI = process.env.NFT_BASE_URI || "https://gateway.pinata.cloud/ipfs/";

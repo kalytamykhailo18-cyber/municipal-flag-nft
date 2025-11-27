@@ -22,8 +22,8 @@ const config = {
     chainId: `0x${(parseInt(import.meta.env.VITE_CHAIN_ID) || 80002).toString(16)}`,
     chainName: import.meta.env.VITE_CHAIN_NAME || 'Polygon Amoy Testnet',
     nativeCurrency: {
-      name: 'MATIC',
-      symbol: 'MATIC',
+      name: 'POL',
+      symbol: 'POL',
       decimals: 18,
     },
     rpcUrls: [import.meta.env.VITE_RPC_URL || 'https://rpc-amoy.polygon.technology'],
