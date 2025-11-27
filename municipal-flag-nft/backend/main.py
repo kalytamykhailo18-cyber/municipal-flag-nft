@@ -3,6 +3,7 @@ Municipal Flag NFT Game - Backend API
 
 Main FastAPI application entry point.
 """
+# Updated to support IPFS import endpoints
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 

@@ -1,8 +1,11 @@
 """
 Admin API Router.
 """
-from typing import Optional
+import json
+from typing import Optional, List
+from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException, status, Header
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
@@ -13,6 +16,20 @@ from models import (
 )
 from schemas import AdminStatsResponse, MessageResponse
 from config import settings
+
+
+class IPFSMappingItem(BaseModel):
+    """Schema for IPFS mapping import."""
+    flag_id: int
+    image_ipfs_hash: str
+    metadata_ipfs_hash: str
+
+
+class IPFSImportResponse(BaseModel):
+    """Response for IPFS import."""
+    message: str
+    updated: int
+    not_found: int
 
 router = APIRouter(tags=["Admin"])
 
@@ -114,3 +131,70 @@ def health_check():
         "project": settings.project_name,
         "environment": settings.environment
     }
+
+
+@router.post("/import-ipfs", response_model=IPFSImportResponse)
+def import_ipfs_mapping(
+    mappings: List[IPFSMappingItem],
+    db: Session = Depends(get_db),
+    _: bool = Depends(verify_admin)
+):
+    """Import IPFS hashes from the ipfs_mapping.json file into flags."""
+    updated = 0
+    not_found = 0
+
+    for mapping in mappings:
+        flag = db.query(Flag).filter(Flag.id == mapping.flag_id).first()
+        if flag:
+            flag.image_ipfs_hash = mapping.image_ipfs_hash
+            flag.metadata_ipfs_hash = mapping.metadata_ipfs_hash
+            updated += 1
+        else:
+            not_found += 1
+
+    db.commit()
+
+    return IPFSImportResponse(
+        message=f"IPFS hashes imported successfully",
+        updated=updated,
+        not_found=not_found
+    )
+
+
+@router.post("/import-ipfs-file", response_model=IPFSImportResponse)
+def import_ipfs_from_file(
+    db: Session = Depends(get_db),
+    _: bool = Depends(verify_admin)
+):
+    """Import IPFS hashes from the local ipfs_mapping.json file."""
+    # Look for ipfs_mapping.json in the backend directory
+    mapping_file = Path(__file__).parent.parent / "ipfs_mapping.json"
+
+    if not mapping_file.exists():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"ipfs_mapping.json not found at {mapping_file}"
+        )
+
+    with open(mapping_file, 'r') as f:
+        mappings = json.load(f)
+
+    updated = 0
+    not_found = 0
+
+    for mapping in mappings:
+        flag = db.query(Flag).filter(Flag.id == mapping["flag_id"]).first()
+        if flag:
+            flag.image_ipfs_hash = mapping["image_ipfs_hash"]
+            flag.metadata_ipfs_hash = mapping["metadata_ipfs_hash"]
+            updated += 1
+        else:
+            not_found += 1
+
+    db.commit()
+
+    return IPFSImportResponse(
+        message=f"IPFS hashes imported from file successfully",
+        updated=updated,
+        not_found=not_found
+    )

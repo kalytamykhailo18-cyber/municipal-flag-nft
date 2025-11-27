@@ -265,12 +265,13 @@ def get_generator():
         print("Using local Stable Diffusion")
         return LocalGenerator()
     elif Config.SD_USE_CLOUD_API:
-        if Config.REPLICATE_API_TOKEN:
-            print("Using Replicate API")
-            return ReplicateGenerator()
-        elif Config.STABILITY_API_KEY:
+        # Prefer Stability AI over Replicate (Replicate requires payment)
+        if Config.STABILITY_API_KEY:
             print("Using Stability AI API")
             return StabilityGenerator()
+        elif Config.REPLICATE_API_TOKEN:
+            print("Using Replicate API")
+            return ReplicateGenerator()
 
     print("No AI API configured, using placeholder generator")
     return PlaceholderGenerator()
