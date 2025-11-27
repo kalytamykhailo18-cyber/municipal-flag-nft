@@ -1,0 +1,131 @@
+## He:
+This would be the general summary of the project. Let me know if you think it's feasible. It needs to be available by December 10th, without delays. I can send any necessary questions about the project during the following week.
+Functional Demonstration of a Municipal Flag NFT Game
+
+Objective:
+To develop a functional demonstration (not in production) of a web game based on NFTs, where players collect flags of real municipalities grouped by country and region. Each flag is an AI (Stable Diffusion) generated NFT, with a pair acquisition mechanic and social features such as bids, player interaction, and history.
+
+Game Content:
+NFTs per Municipal Flag: Each flag has a pair of identical NFTs.
+First unit: Free, can be requested by several users as a sign of interest. Grants access to the social aspect to people interested in flags of a municipality. The social aspect can be simplified.
+Second unit: Acquired through purchase and completes the pair (is removed from the game).
+
+Flag Categories:
+Standard: No discounts.
+Plus: Grants a 50% discount on a future Standard subscription.
+Premium: Grants a permanent 75% discount on the Standard subscription.
+Country > Region > Municipality: Configurable geographic hierarchy in the administrative panel.
+NFT Name: Coordinates of the municipality headquarters to which each flag belongs: fire station, bakery, etc.
+Administrative panel configurable by the owner to change the countries, regions, and municipalities that are displayed:
+Countries
+(4), regions (1 per country), and municipalities (2 per region).
+
+Number of flags per municipality (8).
+AI-generated base image.
+AI-generated NFT images (Stable Diffusion) from the base image for each municipality.
+
+Social System:
+Visualization of interested parties and owners by insignia.
+Connection between players.
+Off-chain auction for closed flags.
+Ranking and reputation.
+
+Blockchain: NFTs on the Polygon network (at a reduced cost).
+Instructions:
+Developing a Functional Demo
+This is not a production product, only a functional demo. The code must be functional, clear, in English, and documented.
+
+Copyright Assignment:
+The copyright assignment for the source code and generated materials is required.
+
+Required Technical Documentation:
+Technical manual for the application (backend, frontend, contracts).
+Graphical system architecture diagram highlighting the main points:
+Frontend: React.
+
+Backend: Node.
+Smart contracts (ERC-721).
+AI: Stable Diffusion.
+
+IPFS for images and metadata.
+
+Step-by-step instructions:
+How to set up the backend, frontend, and AI.
+How to connect wallets and implement contracts on the testnet.
+How to register and change countries, regions, and flags.
+How to simulate the buy/bid flow.
+
+Live demo guide:
+How to display navigation.
+How to claim a flag.
+How to close an NFT pair.
+How to view rankings and social interactions.
+How to change the appearance of the web application on demand.
+Step-by-Step Development:
+Define the project structure and work environment.
+
+Create the backend (REST API, database, AI integration, interest and closing logic).
+
+Implement AI to generate images from source images.
+Connect to IPFS to host images and metadata.
+Develop a smart contract (ERC-721 with peer-to-peer logic).
+Implement the contract on a testnet (Polygon Mumbai).
+Develop the frontend (React) with geographic navigation.
+
+Integrate a wallet (MetaMask) and transaction signing.
+Program the logic for discounts by category.
+Add a bidding system and social interaction (off-chain).
+Test with multiple users and limit conditions.
+Prepare a demo script.
+
+## Me:
+Hello!
+Yes, I think the scope is feasible as a functional demonstration until December 10th, as long as we focus on a lean version:
+– ERC-721 contracts in Polygon (testnet), with NFT pair logic, categories (Standard/Plus/Premium) and discounts.
+– Backend (I can use Node or Python) with REST API, IPFS integration, interest logic, pair purchase/closing, and simulated off-chain auction/social.
+– Frontend in React with navigation by Country > Region > Municipality, MetaMask connection, flag claim/purchase, basic rankings, and a simple panel to manage countries/regions/municipalities/flags.
+– Image generation via Stable Diffusion using a simple flow (we can pre-generate the flag set for the demo).
+– Complete technical documentation and demo guide, as you described.
+
+I just need to align two points to finalize the planning:
+
+1. Do you prefer a backend in Node (Express) or Python (FastAPI/Flask)?
+2. Do you already have the base images for the flags, or should I generate everything from generic AI prompts for the demo?
+
+If you agree with this demo MVP outline, I can organize the schedule to ensure delivery without delays by December 10th.
+
+## He:
+I still have some questions about the scope:
+Will a safety helmet be used?
+Will there be any integration with social networks, or could something be done quickly?
+Will it be configured so that the owner can easily switch between the countries, regions, or municipalities shown?
+Will the owner be able to easily change the displayed NFTs?
+Thank you.
+Will a safety helmet be used?
+Backend --> python
+Will there be any integration with social media, or could something be done quickly? --> I've read that it's possible.
+
+## Me:
+Hello,
+Great questions, I'll answer point by point:
+- Yes, I will use Hardhat as a "security helmet" for development, testing, and deployment of ERC-721 contracts on the Polygon testnet.
+- The backend will be in Python (FastAPI), with a REST API and a simple panel so that the owner can easily switch between the countries, regions, and municipalities that appear.
+- In this same panel, the owner will also be able to change the displayed NFTs (for example, changing images/metadata within the context of the demonstration).
+Regarding social networks, I would focus solely on the game's internal social system (interested parties, owners, ranking, and off-chain auction), without integrating with external networks at this stage, especially since it's just a functional demo.
+Instead of integrating with external social networks, we can keep the social layer entirely within the application: list of interested parties, owners, rankings, and off-chain bid history, enough to demonstrate the concept.
+As it's a demonstration, my proposal is not to integrate with external social networks now; I'm concentrating on building the internal social system (interactions between players, ranking, and off-chain bids), leaving external integrations for a later phase if it makes sense.
+If you agree with these points, I will proceed with this plan to deliver the functional demo by December 10th without delays.
+
+## He:
+OK, agreed.
+Perfect, I'll need documentation for some of the hard hat tests performed.
+
+## Me:
+Thank you for your agreement.
+I can begin as soon as you finalize our contract.
+I will include in the delivery the documentation for the Hardhat tests: what each test validates, how to run it (`npx hardhat test`), environment prerequisites, and example outputs, so that I can easily reproduce everything.
+
+## He:
+Thanks
+I'll pay you for testing.
+The project must be tested; it cannot be shared in any public repository.

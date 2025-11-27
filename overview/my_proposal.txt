@@ -1,0 +1,32 @@
+Proposal
+USD 512.29
+Bid amount: USD 512.29
+
+/ Accepted on: November 23, 2025 13:43
+
+
+Description
+
+Hi,
+
+I have experience building full-stack DApps with Node.js , Python, a JavaScript frontend, and smart contracts with Hard Hat, so it's a great fit for what you need.
+
+At https://www.bitsten.app, I participated in a crypto platform where we developed smart contracts, a Node backend, and a web panel for trading. The challenge was ensuring security and stability in production, which we resolved with good separation of services, automated tests, and continuous integration with Hard Hat.
+At https://www.simplex.com, I worked on a P2P platform with smart contracts and a robust backend. There, the critical point was integrating a wallet, on-chain logic, and an administrative panel without exposing risks, and we solved it with well-defined APIs and call auditing.
+Fora isso, em https://edee.ai , https://www.starugc.com atuei num SaaS em que o python backend coexiste con serviços Node, something similar to o que você descreve de ter Express e Flask ou FastAPI coexisting in an organized way.
+
+Além disso, we launched the Vetra VTR, a 1 to 1 stablecoin with USD in Polygon PoS using Chainlink Functions to test reservations in real time, the GreenDash token launched in Southeast Asia, therefore it is used to full contract cycle, deploy, verification, and integration with backend and painel.
+
+Let's take care of this project and define what EVM network we are going to work on and how the wallet connection flow will be, to avoid gas surprises and UX problems more directly. It is also worth starting from the beginning to have a minimum security strategy for Hardhat contracts, except for serious tests, role control and a clear deployment and upgrade flow, instead of just compiling and uploading the contract.
+
+My plan for playing or developing would be something like that. First, align with you the functionalities of the DApp and the flow of the user, from connecting to the wallet to interacting with the contract. Starting from the structure or backend in Node.js with Express as the main API layer, and using Python with Flask or FastAPI, we will need processing microservices, jobs or any more intense routine. In parallel I build the frontend in JavaScript, with a SPA that acts as the backend and with the blockchain via the appropriate web3 library, always taking care of the user experience, connected wallet, transaction feedback, cargo statuses. On the web3 side, we created the contracts in Solidity using Hardhat, with deploy scripts, unit tests and integration with the test networks that we choose. Afterwards, I integrate everything into a flow, I prepare test environments, I correct things and leave them soon for the first deployment in the production network.
+
+Regarding the requirements you highlighted, I can take on the role of full-stack developer, handling both the JavaScript frontend and the Node backend with Express, as well as Python services with Flask or FastAPI where appropriate. I have direct experience with Hard Hat development, testing, and deployment of smart contracts on EVM networks like Polygon and Ethereum. I can organize the architecture cleanly to ensure the DApp is stable and ready to evolve.
+
+To get started, it would be great to understand which blockchain you prefer to launch the DApp on, if there's already an interface design or if we're starting from scratch, and if there's a deadline for having the first functional version on the test network.
+
+For the scope described, I envision something around four to six weeks of work, with an approximate budget of $400 to $500 USD, and I can adjust the scope to comfortably fit within your budget, always working within your budget.
+
+I will give top priority to this DApp project until it's stable in production.
+Regards,
+Ustym

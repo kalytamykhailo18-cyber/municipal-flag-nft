@@ -1,0 +1,2 @@
+Description: 
+We are looking for a full-stack developer with experience in creating Decentralized Applications (DApps). The project involves developing both the frontend and backend of an application. For the backend, experience with Node.js, specifically using the Express framework, as well as Python frameworks such as Flask or FastAPI, is required. The frontend will utilize JavaScript to ensure an interactive and efficient user interface. Additionally, knowledge and experience with Hardhat for developing and deploying smart contracts on the blockchain is essential.
