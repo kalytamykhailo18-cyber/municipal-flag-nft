@@ -4,90 +4,122 @@ This guide breaks down the entire project into small, manageable steps. Follow e
 
 ---
 
-## Phase 1: Project Setup and Environment
+## Phase 1: Project Setup and Environment ✅ COMPLETED
 
-### Step 1.1: Create Project Root Structure
+### Step 1.1: Create Project Root Structure ✅
 - Create main project folder: `municipal-flag-nft`
 - Inside, create these subfolders:
   - `backend/` (FastAPI application)
-  - `frontend/` (React application)
+  - `frontend/` (React + Vite + TailwindCSS + Redux)
   - `contracts/` (Hardhat smart contracts)
   - `ai-generator/` (Stable Diffusion scripts)
   - `docs/` (Documentation)
 
-### Step 1.2: Initialize Backend (FastAPI)
+### Step 1.2: Initialize Backend (FastAPI) ✅
 - Navigate to `backend/` folder
 - Create Python virtual environment: `python -m venv venv`
-- Activate virtual environment
-- Create `requirements.txt` with initial dependencies:
-  - fastapi
-  - uvicorn
-  - sqlalchemy
-  - python-dotenv
-  - web3
-  - httpx
-  - python-multipart
+- Activate virtual environment:
+  - Git Bash: `source venv/Scripts/activate`
+  - Windows CMD: `venv\Scripts\activate`
+  - PowerShell: `.\venv\Scripts\Activate.ps1`
 
-### Step 1.3: Install Backend Dependencies
+### Step 1.3: Install Backend Dependencies ✅
 - Run: `pip install -r requirements.txt`
-- Verify installation by running: `python -c "import fastapi; print('OK')"`
+- Verify: `python -c "import fastapi; print('OK')"`
+- Test server: `uvicorn main:app --host 127.0.0.1 --port 8000`
+- Open: http://127.0.0.1:8000/docs (Swagger UI)
 
-### Step 1.4: Initialize Frontend (React)
+### Step 1.4: Initialize Frontend (Vite + React) ✅
+- Using Vite instead of Create React App (faster)
 - Navigate to `frontend/` folder
-- Run: `npx create-react-app . --template typescript` (or without typescript if preferred)
-- Verify by running: `npm start` (should open browser with React logo)
-- Stop the server after verification
+- Already configured with:
+  - Vite (build tool)
+  - React 18
+  - TailwindCSS (styling)
+  - Redux Toolkit (state management)
+  - React Router DOM (navigation)
+  - ethers.js (blockchain)
+  - axios (API calls)
 
-### Step 1.5: Install Frontend Additional Dependencies
-- Install these packages:
-  - `npm install ethers` (for blockchain interaction)
-  - `npm install axios` (for API calls)
-  - `npm install react-router-dom` (for navigation)
+### Step 1.5: Install Frontend Dependencies ✅
+- Run: `npm install`
+- Test: `npm run dev`
+- Open: http://127.0.0.1:3000
 
-### Step 1.6: Initialize Hardhat Project
+### Step 1.6: Initialize Hardhat Project ✅
 - Navigate to `contracts/` folder
-- Run: `npm init -y`
-- Run: `npm install --save-dev hardhat`
-- Run: `npx hardhat init` (select "Create a JavaScript project")
-- Install OpenZeppelin: `npm install @openzeppelin/contracts`
+- Run: `npm install`
+- Verify: `npx hardhat --version`
 
-### Step 1.7: Configure Hardhat for Polygon Amoy
-- Open `hardhat.config.js`
-- Add Polygon Amoy network configuration:
-  - Network name: `amoy`
+### Step 1.7: Configure Hardhat for Polygon Amoy ✅
+- `hardhat.config.js` configured with:
+  - Network: `amoy`
   - RPC URL: `https://rpc-amoy.polygon.technology`
   - Chain ID: `80002`
-- Add placeholder for private key (from .env)
+  - Reads private key from root `.env`
 
-### Step 1.8: Create Environment Files
-- In `backend/`: create `.env` with placeholders for:
-  - DATABASE_URL
-  - IPFS_API_KEY
-  - IPFS_API_SECRET
-  - CONTRACT_ADDRESS (empty for now)
-- In `contracts/`: create `.env` with:
-  - PRIVATE_KEY (deployer wallet)
-  - POLYGONSCAN_API_KEY (for verification)
-- In `frontend/`: create `.env` with:
-  - REACT_APP_API_URL
-  - REACT_APP_CONTRACT_ADDRESS (empty for now)
+### Step 1.8: Create Centralized Environment File ✅
+- Single `.env` file in project root (not in subfolders)
+- Contains ALL settings for backend, frontend, contracts, AI
+- Key variables:
+  - `DATABASE_URL=sqlite:///./nft_game.db`
+  - `ADMIN_API_KEY=demo-admin-key-change-me`
+  - `DEPLOYER_PRIVATE_KEY=` (add your key)
+  - `CONTRACT_ADDRESS=` (fill after deployment)
+  - `PINATA_API_KEY=` (for IPFS)
+  - `VITE_API_URL=http://localhost:8000/api` (frontend)
 
-### Step 1.9: Setup Git Repository (Private)
-- Initialize git in project root: `git init`
-- Create `.gitignore` with:
+### Step 1.9: Setup Git Repository ✅
+- `.gitignore` configured to exclude:
   - `node_modules/`
   - `venv/`
   - `.env`
   - `__pycache__/`
   - `artifacts/`
   - `cache/`
-- Make first commit: "Initial project structure"
+  - `*.db`
+
+### How to Run (Summary)
+
+**Backend:**
+```bash
+cd backend
+source venv/Scripts/activate  # Git Bash
+uvicorn main:app --host 127.0.0.1 --port 8000
+# Open: http://127.0.0.1:8000/docs
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm run dev
+# Open: http://127.0.0.1:3000
+```
+
+**Contracts:**
+```bash
+cd contracts
+npx hardhat compile
+npx hardhat test
+```
 
 ---
 
-## Phase 2: Database Design and Backend Foundation
+## Phase 2: Database Design and Backend Foundation ✅ COMPLETED
 
-### Step 2.1: Create Database Schema File
+All database models and tables have been created and verified.
+
+### Step 2.1-2.15: Database Setup ✅
+- `models.py` - All 10 models created:
+  - Country, Region, Municipality, Flag
+  - User, FlagInterest, FlagOwnership
+  - UserConnection, Auction, Bid
+- `database.py` - SQLAlchemy engine configured
+- `schemas.py` - Pydantic validation schemas
+- Database auto-creates on startup
+- Tables verified at: http://127.0.0.1:8000/docs
+
+### Original Step 2.1: Create Database Schema File
 - In `backend/`, create `models.py`
 - Define SQLAlchemy base class
 
@@ -212,9 +244,23 @@ This guide breaks down the entire project into small, manageable steps. Follow e
 
 ---
 
-## Phase 3: Backend API Endpoints
+## Phase 3: Backend API Endpoints ✅ COMPLETED
 
-### Step 3.1: Create Schemas File
+All API endpoints have been created and verified via Swagger UI at http://127.0.0.1:8000/docs
+
+### Step 3.1-3.21: API Endpoints ✅
+- `routers/countries.py` - Countries CRUD endpoints
+- `routers/regions.py` - Regions CRUD endpoints
+- `routers/municipalities.py` - Municipalities CRUD endpoints
+- `routers/flags.py` - Flags CRUD + Interest endpoints
+- `routers/users.py` - Users + Connections endpoints
+- `routers/auctions.py` - Auctions + Bids endpoints
+- `routers/rankings.py` - Rankings endpoints
+- `routers/admin.py` - Admin endpoints + Seed data
+
+All endpoints tested via Swagger UI.
+
+### Original Step 3.1: Create Schemas File
 - In `backend/`, create `schemas.py`
 - Define Pydantic models for request/response:
   - CountryCreate, CountryResponse
@@ -1319,28 +1365,28 @@ This guide breaks down the entire project into small, manageable steps. Follow e
 
 ## Summary Checklist
 
-### Phase 1: Project Setup ✓
-- [ ] Project structure created
-- [ ] Backend initialized (FastAPI)
-- [ ] Frontend initialized (React)
-- [ ] Hardhat initialized
-- [ ] Environment files created
-- [ ] Git repository initialized
+### Phase 1: Project Setup ✅ COMPLETED
+- [x] Project structure created
+- [x] Backend initialized (FastAPI)
+- [x] Frontend initialized (Vite + React + TailwindCSS + Redux)
+- [x] Hardhat initialized
+- [x] Environment files created
+- [x] Git repository initialized
 
-### Phase 2: Database ✓
-- [ ] All models defined
-- [ ] Database connection setup
-- [ ] Tables created
+### Phase 2: Database ✅ COMPLETED
+- [x] All models defined (10 models)
+- [x] Database connection setup (SQLite)
+- [x] Tables created (auto-create on startup)
 
-### Phase 3: Backend API ✓
-- [ ] Countries CRUD
-- [ ] Regions CRUD
-- [ ] Municipalities CRUD
-- [ ] Flags CRUD + Interest
-- [ ] Users + Connections
-- [ ] Auctions + Bids
-- [ ] Rankings
-- [ ] Admin endpoints
+### Phase 3: Backend API ✅ COMPLETED
+- [x] Countries CRUD
+- [x] Regions CRUD
+- [x] Municipalities CRUD
+- [x] Flags CRUD + Interest
+- [x] Users + Connections
+- [x] Auctions + Bids
+- [x] Rankings
+- [x] Admin endpoints
 
 ### Phase 4: Smart Contract ✓
 - [ ] Contract written
