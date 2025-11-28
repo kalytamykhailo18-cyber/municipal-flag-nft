@@ -17,6 +17,7 @@ const RegionDetail = lazy(() => import('./pages/RegionDetail'));
 const MunicipalityDetail = lazy(() => import('./pages/MunicipalityDetail'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Auctions = lazy(() => import('./pages/Auctions'));
+const AuctionDetail = lazy(() => import('./pages/AuctionDetail'));
 const Rankings = lazy(() => import('./pages/Rankings'));
 const Admin = lazy(() => import('./pages/Admin'));
 
@@ -42,6 +43,7 @@ function App() {
               <Route path="/flags/:id" element={<FlagDetail />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/auctions" element={<Auctions />} />
+              <Route path="/auctions/:id" element={<AuctionDetail />} />
               <Route path="/rankings" element={<Rankings />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>
