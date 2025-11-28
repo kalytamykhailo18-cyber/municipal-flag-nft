@@ -82,9 +82,13 @@ def get_municipality(
         municipality_count=len(municipality.region.municipalities)
     )
 
-    # Build flags list
+    # Build flags list (filter out completed pairs - they're "removed from game")
     flags_data = []
     for flag in municipality.flags:
+        # Skip flags where the pair is complete (removed from game)
+        if flag.is_pair_complete:
+            continue
+
         flags_data.append(FlagResponse(
             id=flag.id,
             municipality_id=flag.municipality_id,
